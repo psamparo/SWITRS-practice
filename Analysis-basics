@@ -1,0 +1,75 @@
+---
+# title: "SWITRS"
+#author: "Pam Amparo"
+#date: "October 2018"
+#output: html_document
+---
+
+#```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+
+### set up the environment
+#```{r }
+# check to see the default library that's set
+.libPaths()
+
+# can select the primary libpath using: 
+#myPaths <- .libPaths()
+#.libPaths(myPaths)  # add new path
+#myPaths <- c(myPaths[2], myPaths[1])  # switch them
+#.libPaths(myPaths)  # reassign them
+
+
+# install and save these packages:
+install.packages(c("icd", "stringr", "dplyr", "sas7bdat", "eeptools"))
+library("icd") 
+library("stringr") 
+library("dplyr")
+library("sas7bdat")
+library("eeptools")
+
+
+## import csv files for deaths in SCC into R
+#{r import file}
+#disables scientific notation so the SFN & LFN's are read in as numbers not in scientific notation
+options(scipen = 999)
+
+
+#Clear workspace
+rm(list=ls())
+
+#Check workspace
+ls()
+
+Collisions_2006.2009 <- read.csv("P:/Main/HAQI/Epidemiology & Data Management/Datasets/SWITRS_TIMS/data downloaded 08152018/Downloads/Collisions/Collisions_2006-2009.csv")
+
+View(Collisions_2006.2009)
+
+summary(Collisions_2006.2009)
+
+Summary(collisions)
+
+#add value labels
+Collisions_2006.2009$DAY_OF_WEEK <- ordered(Collisions_2006.2009$DAY_OF_WEEK,
+                    levels = c(1,2,3,4,5,6,7),
+                    labels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
+
+#install package for checking frequencies
+install.packages('plyr')
+
+#call package for checking frequencies
+library (plyr)
+
+#Check frequencies of new labels
+count(Collisions_2006.2009,'DAY_OF_WEEK')
+
+
+#Create separate dataset for DAY of Week = Friday
+Friday <- Collisions_2006.2009[(Collisions_2006.2009$DAY_OF_WEEK == "Friday"),]
+
+# check distribution of collisions to make sure only Friday
+table(Friday$DAY_OF_WEEK)
+
+write.csv(Friday, "P:\\Main\\HAQI\\Epidemiology & Data Management\\Staff\\Pam Amparo\\R\\Friday.csv")
+
